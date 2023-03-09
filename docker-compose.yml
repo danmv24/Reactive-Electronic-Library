@@ -3,7 +3,7 @@ version: '3.9'
 services:
   postgres:
     image: postgres:13.3
-    container_name: java-postgres
+    container_name: java-postgres-db
     environment:
       POSTGRES_DB: reactive_library
       POSTGRES_USER: danis
@@ -16,7 +16,7 @@ services:
     build: ./
     container_name: springboot-reactive-app
     environment:
-      SPRING_DATASOURCE_URL: "r2dbc:postgresql://java-postgres:5432/reactive_library"
+      SPRING_DATASOURCE_URL: "r2dbc:postgresql://java-postgres-db:5432/reactive_library"
       MINIO_BUCKET_NAME: reactive-library
       MINIO_DEFAULT_FOLDER: /
       MINIO_ACCESS_NAME: danis
@@ -33,7 +33,7 @@ services:
   minio:
     image: minio/minio:latest
     command: server --console-address ":9001" /data/
-    container_name: minio-library
+    container_name: minio-reactive-library
     ports:
       - "9000:9000"
       - "9001:9001"

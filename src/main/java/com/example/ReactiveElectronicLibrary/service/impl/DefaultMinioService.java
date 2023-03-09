@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import reactor.core.publisher.Mono;
 
 import java.io.IOException;
 import java.security.InvalidKeyException;
@@ -25,7 +26,7 @@ public class DefaultMinioService implements MinioService {
 
 
     @Override
-    public void uploadFile(MultipartFile file) {
+    public Mono<Void> uploadFile(MultipartFile file) {
         try {
             minioClient.putObject(PutObjectArgs.builder()
                     .bucket(defaultBucketName)
@@ -37,12 +38,13 @@ public class DefaultMinioService implements MinioService {
                  InvalidKeyException | IOException | InvalidResponseException | XmlParserException | InternalException e) {
             throw new RuntimeException(e);
         }
+        return null;
     }
 
 
 
     @Override
-    public void getFile(String filename) {
+    public Mono<Void> getFile(String filename) {
         try {
             DownloadObjectArgs downloadObjectArgs = DownloadObjectArgs.builder()
                     .bucket(defaultBucketName)
@@ -55,10 +57,11 @@ public class DefaultMinioService implements MinioService {
                  XmlParserException e) {
             throw new RuntimeException(e);
         }
+        return null;
     }
 
     @Override
-    public void deleteFile(String filename) {
+    public Mono<Void> deleteFile(String filename) {
         try {
             minioClient.removeObject(RemoveObjectArgs.builder()
                     .object(filename)
@@ -68,5 +71,6 @@ public class DefaultMinioService implements MinioService {
                  IOException | NoSuchAlgorithmException | InvalidKeyException | ServerException | XmlParserException e) {
             throw new RuntimeException(e);
         }
+        return null;
     }
 }

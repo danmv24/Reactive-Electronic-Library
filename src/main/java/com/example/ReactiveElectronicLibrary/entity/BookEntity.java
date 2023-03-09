@@ -19,6 +19,9 @@ public class BookEntity {
     private String title;
 
     @NonNull
+    private String filename;
+
+    @NonNull
     private String description;
 
     @Column("author_id")
