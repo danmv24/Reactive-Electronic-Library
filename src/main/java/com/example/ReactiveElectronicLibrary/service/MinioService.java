@@ -1,12 +1,12 @@
 package com.example.ReactiveElectronicLibrary.service;
 
-import org.springframework.web.multipart.MultipartFile;
-import reactor.core.publisher.Mono;
+
+import org.springframework.http.codec.multipart.FilePart;
 
 public interface MinioService {
-    Mono<Void> uploadFile(MultipartFile file);
+    void uploadFile(FilePart file);
 
-    Mono<Void> getFile(String filename);
+    void getFile(String filename);
 
-    Mono<Void> deleteFile(String filename);
+    void deleteFile(String filename);
 }

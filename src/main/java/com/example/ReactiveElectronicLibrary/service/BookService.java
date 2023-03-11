@@ -2,12 +2,12 @@ package com.example.ReactiveElectronicLibrary.service;
 
 import com.example.ReactiveElectronicLibrary.form.BookForm;
 import com.example.ReactiveElectronicLibrary.view.BookView;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.http.codec.multipart.FilePart;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 public interface BookService {
-    Mono<Long> save(BookForm bookForm, MultipartFile file);
+    Mono<Long> save(BookForm bookForm, FilePart file);
 
     Mono<BookView> findBook(Long id);
 

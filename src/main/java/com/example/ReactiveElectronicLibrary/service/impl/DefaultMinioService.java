@@ -1,5 +1,6 @@
 package com.example.ReactiveElectronicLibrary.service.impl;
 
+import com.example.ReactiveElectronicLibrary.service.ConverterService;
 import com.example.ReactiveElectronicLibrary.service.MinioService;
 import io.minio.DownloadObjectArgs;
 import io.minio.MinioClient;
@@ -8,9 +9,8 @@ import io.minio.RemoveObjectArgs;
 import io.minio.errors.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-import reactor.core.publisher.Mono;
 
 import java.io.IOException;
 import java.security.InvalidKeyException;
@@ -21,30 +21,32 @@ public class DefaultMinioService implements MinioService {
     @Autowired
     private MinioClient minioClient;
 
+    @Autowired
+    private ConverterService converterService;
+
     @Value("${minio.bucket.name}")
     private String defaultBucketName;
 
 
     @Override
-    public Mono<Void> uploadFile(MultipartFile file) {
+    public void uploadFile(FilePart file) {
         try {
             minioClient.putObject(PutObjectArgs.builder()
                     .bucket(defaultBucketName)
-                    .object(file.getOriginalFilename())
-                    .stream(file.getInputStream(), file.getSize(), -1)
+                    .object(file.filename())
+                    .stream(converterService.getInputStreamFromFluxDataBuffer(file.content()), -1, 10485760)
                     .build());
 
         } catch (ServerException | InsufficientDataException | ErrorResponseException | NoSuchAlgorithmException |
                  InvalidKeyException | IOException | InvalidResponseException | XmlParserException | InternalException e) {
             throw new RuntimeException(e);
         }
-        return null;
     }
 
 
 
     @Override
-    public Mono<Void> getFile(String filename) {
+    public void getFile(String filename) {
         try {
             DownloadObjectArgs downloadObjectArgs = DownloadObjectArgs.builder()
                     .bucket(defaultBucketName)
@@ -57,11 +59,10 @@ public class DefaultMinioService implements MinioService {
                  XmlParserException e) {
             throw new RuntimeException(e);
         }
-        return null;
     }
 
     @Override
-    public Mono<Void> deleteFile(String filename) {
+    public void deleteFile(String filename) {
         try {
             minioClient.removeObject(RemoveObjectArgs.builder()
                     .object(filename)
@@ -71,6 +72,5 @@ public class DefaultMinioService implements MinioService {
                  IOException | NoSuchAlgorithmException | InvalidKeyException | ServerException | XmlParserException e) {
             throw new RuntimeException(e);
         }
-        return null;
     }
 }

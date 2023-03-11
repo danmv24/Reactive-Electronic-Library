@@ -4,8 +4,8 @@ import com.example.ReactiveElectronicLibrary.form.BookForm;
 import com.example.ReactiveElectronicLibrary.service.BookService;
 import com.example.ReactiveElectronicLibrary.view.BookView;
 import lombok.AllArgsConstructor;
+import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -18,7 +18,7 @@ public class BookController {
 
 
     @PostMapping("/add")
-    public Mono<Long> addBook(@RequestPart("book") BookForm bookForm, @RequestPart("file") MultipartFile file) {
+    public Mono<Long> addBook(@RequestPart("book") BookForm bookForm, @RequestPart("file") FilePart file) {
         return bookService.save(bookForm, file);
     }
 
