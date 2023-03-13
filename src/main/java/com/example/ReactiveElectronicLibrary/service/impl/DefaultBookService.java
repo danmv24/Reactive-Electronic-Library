@@ -60,6 +60,19 @@ public class DefaultBookService implements BookService {
     }
 
     @Override
+    public Mono<Void> download(String filename) {
+
+        minioService.getFile(filename);
+
+        return Mono.empty();
+
+//        return bookRepository.findById(id)
+//                .switchIfEmpty(Mono.error(new BookServiceException(HttpStatus.NOT_FOUND, "Book not found!!!")))
+//                .flatMap(bookEntity -> minioService.getFile(bookEntity.getFilename()))
+//                .then();
+    }
+
+    @Override
     public Mono<Void> delete(Long id) {
         return bookRepository.findById(id)
                 .switchIfEmpty(Mono.error(new BookServiceException(HttpStatus.NOT_FOUND, "Book or File not found!!!")))

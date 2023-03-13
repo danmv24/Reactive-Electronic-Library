@@ -13,5 +13,7 @@ public interface BookService {
 
     Flux<BookView> findAllBooks();
 
+    Mono<Void> download(String filename);
+
     Mono<Void> delete(Long id);
 }

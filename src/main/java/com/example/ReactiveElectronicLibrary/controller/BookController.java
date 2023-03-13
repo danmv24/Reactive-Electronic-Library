@@ -32,6 +32,11 @@ public class BookController {
         return bookService.findAllBooks();
     }
 
+    @GetMapping("/download/{filename}")
+    public void download(@PathVariable(value = "filename") String filename) {
+        bookService.download(filename);
+    }
+
     @DeleteMapping("/delete/{id}")
     public Mono<Void> deleteBook(@PathVariable(value = "id") Long id) {
         return bookService.delete(id);
