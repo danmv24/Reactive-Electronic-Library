@@ -32,6 +32,11 @@ public class BookController {
         return bookService.findAllBooks();
     }
 
+    @PutMapping("/edit/{id}")
+    public Mono<Void> editBookInformation(@PathVariable(value = "id") Long id, @RequestPart("book") BookForm bookForm) {
+        return bookService.edit(id, bookForm);
+    }
+
     @GetMapping("/download/{filename}")
     public void download(@PathVariable(value = "filename") String filename) {
         bookService.download(filename);
